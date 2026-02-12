@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>💰 Calculadora de Salário Líquido 2026</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
+    <style>
+        :root {
+            --bg-gradient-start: #1e3c72;
+            --bg-gradient-mid: #2a5298;
+            --bg-gradient-end: #7e8ba3;
+            --container-bg: linear-gradient(to bottom, #ffffff, #f8f9fa);
+            --primary-color: #1e3c72;
+            --primary-hover: #2a5298;
+            --secondary-color: #c9a745;
+            --text-primary: #2c3e50;
+            --text-secondary: #495057;
+            --border-color: #d1d8e0;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --info-color: #2196f3;
+            --card-bg: linear-gradient(135deg, #f8f9fa, #ffffff);
+            --input-bg: #ffffff;
+            --resumo-total-bg: linear-gradient(135deg, #bbdefb, #90caf9);
+            --resumo-total-text: #1e3c72;
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient-start: #0a0e1a;
+            --bg-gradient-mid: #1a2332;
+            --bg-gradient-end: #2d3748;
+            --container-bg: linear-gradient(to bottom, #1a202c, #2d3748);
+            --primary-color: #4a90e2;
+            --primary-hover: #357abd;
+            --secondary-color: #f4c430;
+            --text-primary: #e2e8f0;
+            --text-secondary: #cbd5e0;
+            --border-color: #4a5568;
+            --success-color: #48bb78;
+            --danger-color: #fc8181;
+            --info-color: #63b3ed;
+            --card-bg: linear-gradient(135deg, #2d3748, #1a202c);
+            --input-bg: #2d3748;
+            --resumo-total-bg: linear-gradient(135deg, #2c5282, #2b6cb0);
+            --resumo-total-text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.3s ease;
+        }
+
+        .container {
+            background: var(--container-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            transition: background 0.3s ease;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+            margin-top: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .input-currency-wrapper {
+            position: relative;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 16px;
+            pointer-events: none;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+
+        input[type="text"].currency-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            text-align: right;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        input[type="text"].currency-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.1);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.1);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-calculate, .btn-clear {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+        }
+
+        .btn-calculate {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        .btn-calculate:active {
+            transform: scale(0.98);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+            grid-column: 1 / -1;
+            font-size: 16px;
+            padding: 12px;
+        }
+
+        .btn-clear:hover {
+            background: linear-gradient(135deg, #5a6268, #495057);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-clear:active {
+            transform: scale(0.98);
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--secondary-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: background 0.3s ease;
+        }
+
+        .resumo-box {
+            background: linear-gradient(135deg, #e8f4f8, #d4e9f7);
+            border: 3px solid var(--info-color);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .resumo-box {
+            background: linear-gradient(135deg, #2d3748, #1a202c);
+            border-color: var(--info-color);
+        }
+
+        .resumo-title {
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="dark"] .resumo-item {
+            background: rgba(45, 55, 72, 0.7);
+        }
+
+        .resumo-item.positivo {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .resumo-item.negativo {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .resumo-item.total-bruto {
+            background: var(--resumo-total-bg);
+            border: none;
+            font-weight: 700;
+        }
+
+        .resumo-item.total-bruto .resumo-label,
+        .resumo-item.total-bruto .resumo-value {
+            color: var(--resumo-total-text);
+        }
+
+        .resumo-item.total {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: 10px;
+            padding: 15px;
+            border: none;
+        }
+
+        .resumo-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .resumo-item.total .resumo-label,
+        .resumo-item.total .resumo-value {
+            color: white;
+        }
+
+        .resumo-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .result-value {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .subsection {
+            background: rgba(241, 243, 245, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="dark"] .subsection {
+            background: rgba(45, 55, 72, 0.5);
+        }
+
+        .subsection-title {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .final-result {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(30, 60, 114, 0.3);
+            transition: background 0.3s ease;
+        }
+
+        .final-result h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .final-result .value {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--secondary-color), #d4af37);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .table-box {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .table-box h3 {
+            color: var(--primary-color);
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table th {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr:nth-child(even) {
+            background-color: rgba(248, 249, 250, 0.5);
+        }
+
+        [data-theme="dark"] table tr:nth-child(even) {
+            background-color: rgba(45, 55, 72, 0.3);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .highlight-info {
+            background: #e8f5e9;
+            border-left: 4px solid var(--success-color);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 13px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .highlight-info {
+            background: rgba(72, 187, 120, 0.2);
+        }
+
+        .aliquota-info {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #e65100;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .aliquota-info {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ffa726;
+        }
+
+        .aliquota-info-inss {
+            background: #fce4ec;
+            border-left: 4px solid #e91e63;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #880e4f;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .aliquota-info-inss {
+            background: rgba(233, 30, 99, 0.2);
+            color: #f48fb1;
+        }
+
+        .total-bruto {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px solid var(--info-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .total-bruto {
+            background: linear-gradient(135deg, rgba(99, 179, 237, 0.2), rgba(66, 153, 225, 0.1));
+        }
+
+        .total-bruto-label {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .total-bruto-value {
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        small {
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-top: 40px;
+            }
+
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+
+            table {
+                font-size: 11px;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+
+            .final-result .value {
+                font-size: 28px;
+            }
+
+            .resumo-item {
+                font-size: 13px;
+                padding: 10px;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Modo Escuro</span>
+        </button>
+
+        <h1>💰 Calculadora de Salário Líquido</h1>
+        <p class="subtitle">Tabelas INSS e IRRF 2026 atualizadas (Lei 15.270/2025)</p>
+
+        <form id="calculatorForm">
+            <div class="form-group">
+                <label for="salarioBruto">Salário Bruto Mensal</label>
+                <div class="input-currency-wrapper">
+                    <span class="currency-symbol">R$</span>
+                    <input type="text" id="salarioBruto" class="currency-input" placeholder="0,00" required inputmode="decimal">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="outrosRendimentos">Outros Rendimentos</label>
+                    <div class="input-currency-wrapper">
+                        <span class="currency-symbol">R$</span>
+                        <input type="text" id="outrosRendimentos" class="currency-input" placeholder="0,00" value="0,00" inputmode="decimal">
+                    </div>
+                    <small>Ex: horas extras, comissões, bônus</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="outrosDescontos">Outros Descontos</label>
+                    <div class="input-currency-wrapper">
+                        <span class="currency-symbol">R$</span>
+                        <input type="text" id="outrosDescontos" class="currency-input" placeholder="0,00" value="0,00" inputmode="decimal">
+                    </div>
+                    <small>Ex: plano de saúde, vale transporte</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="dependentes">Número de Dependentes (para IRRF)</label>
+                <input type="number" id="dependentes" min="0" value="0" inputmode="numeric">
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-calculate">Calcular Salário Líquido</button>
+                <button type="button" class="btn-clear" onclick="limparCampos()">🗑️ Limpar Campos</button>
+            </div>
+        </form>
+
+        <div class="results" id="results">
+
+            <!-- RESUMO EXECUTIVO -->
+            <div class="resumo-box">
+                <div class="resumo-title">📋 Resumo do Cálculo</div>
+
+                <div class="resumo-item positivo">
+                    <span class="resumo-label">(+) Salário Bruto Mensal</span>
+                    <span class="resumo-value" id="resumoBruto">R$ 0,00</span>
+                </div>
+
+                <div class="resumo-item positivo">
+                    <span class="resumo-label">(+) Outros Rendimentos</span>
+                    <span class="resumo-value" id="resumoOutrosRend">R$ 0,00</span>
+                </div>
+
+                <div class="resumo-item total-bruto">
+                    <span class="resumo-label">(=) Salário Bruto Total</span>
+                    <span class="resumo-value" id="resumoBrutoTotal">R$ 0,00</span>
+                </div>
+
+                <div class="resumo-item negativo">
+                    <span class="resumo-label" id="resumoINSSLabel">(-) Desconto INSS (7,5%)</span>
+                    <span class="resumo-value" id="resumoINSS">R$ 0,00</span>
+                </div>
+
+                <div class="resumo-item negativo">
+                    <span class="resumo-label" id="resumoIRRFLabel">(-) Desconto IRRF (0%)</span>
+                    <span class="resumo-value" id="resumoIRRF">R$ 0,00</span>
+                </div>
+
+                <div class="resumo-item negativo">
+                    <span class="resumo-label">(-) Outros Descontos</span>
+                    <span class="resumo-value" id="resumoOutrosDesc">R$ 0,00</span>
+                </div>
+
+                <div class="resumo-item total">
+                    <span class="resumo-label">(=) SALÁRIO LÍQUIDO TOTAL</span>
+                    <span class="resumo-value" id="resumoLiquido">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h3 style="color: var(--primary-color); margin-bottom: 15px; font-size: 18px;">📊 Detalhamento dos Cálculos</h3>
+
+                <div class="result-item">
+                    <span class="result-label">Salário Bruto Base</span>
+                    <span class="result-value" id="showBruto">R$ 0,00</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">(+) Outros Rendimentos</span>
+                    <span class="result-value" id="showOutrosRend" style="color: var(--success-color);">R$ 0,00</span>
+                </div>
+
+                <div class="total-bruto">
+                    <div class="total-bruto-label">= SALÁRIO BRUTO TOTAL</div>
+                    <div class="total-bruto-value" id="showBrutoTotal">R$ 0,00</div>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">(-) INSS Descontado</span>
+                    <span class="result-value" id="showINSSDescontado" style="color: var(--danger-color);">R$ 0,00</span>
+                </div>
+
+                <div class="aliquota-info-inss" id="faixaINSS">
+                    📌 Faixa INSS aplicada: Até R$ 1.621,00 | Alíquota: 7,5%
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">🔍 Escolha da Dedução para Cálculo do IRRF (mais vantajosa)</div>
+
+                    <div class="result-item">
+                        <span class="result-label">INSS Calculado (progressivo)</span>
+                        <span class="result-value" id="showINSSCalc">R$ 0,00</span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">Desconto Simplificado (fixo)</span>
+                        <span class="result-value" id="showDescSimp">R$ 607,20</span>
+                    </div>
+
+                    <div class="highlight-info" id="metodoEscolhido">
+                        ✓ Método utilizado para base IRRF: Desconto Simplificado (mais vantajoso)
+                    </div>
+
+                    <div class="result-item" style="border-top: 2px solid var(--secondary-color); margin-top: 5px; padding-top: 10px;">
+                        <span class="result-label"><strong>(-) Dedução para Cálculo do IRRF</strong></span>
+                        <span class="result-value" id="showDeducaoIRRF" style="color: var(--info-color);"><strong>R$ 0,00</strong></span>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <div class="subsection-title">📋 Cálculo do IRRF</div>
+
+                    <div class="result-item">
+                        <span class="result-label">Base de Cálculo (Bruto Total - Dedução)</span>
+                        <span class="result-value" id="showBaseIRRF">R$ 0,00</span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">(-) Dedução por Dependentes</span>
+                        <span class="result-value" id="showDeducaoDep" style="color: var(--success-color);">R$ 0,00</span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">Base Tributável</span>
+                        <span class="result-value" id="showBaseTributavel">R$ 0,00</span>
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">IRRF pela Tabela Tradicional</span>
+                        <span class="result-value" id="showIRRFTabela">R$ 0,00</span>
+                    </div>
+
+                    <div class="aliquota-info" id="faixaIRRF">
+                        📌 Faixa IRRF aplicada: Isento
+                    </div>
+
+                    <div class="result-item">
+                        <span class="result-label">(-) Desconto Adicional Lei 15.270/2025</span>
+                        <span class="result-value" id="showDescontoAdicional" style="color: var(--success-color);">R$ 0,00</span>
+                    </div>
+
+                    <div class="result-item" style="border-top: 2px solid var(--secondary-color); margin-top: 5px; padding-top: 10px;">
+                        <span class="result-label"><strong>IRRF Final a Descontar</strong></span>
+                        <span class="result-value" id="showIRRF" style="color: var(--danger-color);"><strong>R$ 0,00</strong></span>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">(-) Outros Descontos</span>
+                    <span class="result-value" id="showOutrosDesc" style="color: var(--danger-color);">R$ 0,00</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">💼 FGTS (8% sobre salário bruto total - depositado pelo empregador)</span>
+                    <span class="result-value" id="showFGTS" style="color: var(--success-color);">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="final-result">
+                <h2>SALÁRIO LÍQUIDO</h2>
+                <div class="value" id="salarioLiquido">R$ 0,00</div>
+            </div>
+
+            <div class="info-box">
+                <strong>ℹ️ Como funciona o cálculo:</strong><br>
+                • <strong>Salário Bruto Total:</strong> Salário base + outros rendimentos tributáveis (horas extras, comissões, bônus)<br>
+                • <strong>INSS Descontado:</strong> Sempre descontado do salário (calculado progressivamente sobre o bruto total)<br>
+                • <strong>Dedução para IRRF:</strong> Compara INSS vs Desconto Simplificado (R$ 607,20) e usa o MAIOR apenas para cálculo da base do IRRF<br>
+                • <strong>Importante:</strong> O desconto simplificado NÃO substitui o INSS no salário líquido, apenas na base de cálculo do IRRF<br>
+                • <strong>Desconto Adicional IRRF:</strong><br>
+                &nbsp;&nbsp;→ Até R$ 5.000: desconto de até R$ 312,89 (isenção total)<br>
+                &nbsp;&nbsp;→ De R$ 5.000,01 a R$ 7.350: desconto progressivo<br>
+                &nbsp;&nbsp;→ Acima de R$ 7.350: sem desconto adicional<br>
+                • <strong>Dependentes:</strong> Cada dependente deduz R$ 189,59 da base de cálculo do IRRF<br>
+                • <strong>FGTS:</strong> 8% calculado sobre o salário bruto total (base + outros rendimentos), depositado pelo empregador (não descontado do salário)
+            </div>
+
+            <div class="table-box">
+                <h3>📊 Tabela INSS 2026</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Faixa Salarial</th>
+                                <th>Alíquota</th>
+                                <th>Dedução</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Até R$ 1.621,00</td>
+                                <td>7,50%</td>
+                                <td>R$ 0,00</td>
+                            </tr>
+                            <tr>
+                                <td>R$ 1.621,01 a R$ 2.902,84</td>
+                                <td>9,00%</td>
+                                <td>R$ 24,32</td>
+                            </tr>
+                            <tr>
+                                <td>R$ 2.902,85 a R$ 4.354,27</td>
+                                <td>12,00%</td>
+                                <td>R$ 111,40</td>
+                            </tr>
+                            <tr>
+                                <td>R$ 4.354,28 a R$ 8.475,55</td>
+                                <td>14,00%</td>
+                                <td>R$ 198,49</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px; font-style: italic;">
+                    <strong>Cálculo:</strong> (Salário × Alíquota) - Dedução da Faixa | <strong>Este valor é SEMPRE descontado do salário</strong>
+                </p>
+            </div>
+
+            <div class="table-box">
+                <h3>📊 Tabela IRRF 2026 - Tradicional</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Base de Cálculo Mensal</th>
+                                <th>Alíquota</th>
+                                <th>Parcela a Deduzir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Até R$ 2.428,80</td>
+                                <td>Isento</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>R$ 2.428,81 a R$ 2.826,65</td>
+                                <td>7,5%</td>
+                                <td>R$ 182,16</td>
+                            </tr>
+                            <tr>
+                                <td>R$ 2.826,66 a R$ 3.751,05</td>
+                                <td>15%</td>
+                                <td>R$ 394,16</td>
+                            </tr>
+                            <tr>
+                                <td>R$ 3.751,06 a R$ 4.664,68</td>
+                                <td>22,5%</td>
+                                <td>R$ 675,49</td>
+                            </tr>
+                            <tr>
+                                <td>Acima de R$ 4.664,68</td>
+                                <td>27,5%</td>
+                                <td>R$ 908,73</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px; font-style: italic;">
+                    <strong>Cálculo:</strong> (Base Tributável × Alíquota) - Parcela a Deduzir
+                </p>
+            </div>
+
+            <div class="table-box">
+                <h3>📊 Desconto Adicional IRRF 2026 (Lei 15.270/2025)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rendimento Mensal Bruto</th>
+                                <th>Desconto Adicional</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Até R$ 5.000,00</td>
+                                <td>Até R$ 312,89 (zera o imposto)</td>
+                            </tr>
+                            <tr>
+                                <td>R$ 5.000,01 a R$ 7.350,00</td>
+                                <td>R$ 978,62 - (0,133145 × renda)</td>
+                            </tr>
+                            <tr>
+                                <td>Acima de R$ 7.350,00</td>
+                                <td>Sem desconto adicional</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 10px; font-style: italic;">
+                    <strong>Aplicação:</strong> Este desconto é aplicado APÓS o cálculo do IRRF pela tabela tradicional, garantindo a isenção para quem ganha até R$ 5.000
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MODO ESCURO - Carrega preferência salva
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+            if (theme === 'dark') {
+                icon.textContent = '☀️';
+                text.textContent = 'Modo Claro';
+            } else {
+                icon.textContent = '🌙';
+                text.textContent = 'Modo Escuro';
+            }
+        }
+
+        // LIMPAR CAMPOS
+        function limparCampos() {
+            if (confirm('Deseja limpar todos os campos e resultados?')) {
+                document.getElementById('salarioBruto').value = '0,00';
+                document.getElementById('outrosRendimentos').value = '0,00';
+                document.getElementById('outrosDescontos').value = '0,00';
+                document.getElementById('dependentes').value = '0';
+                document.getElementById('results').style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // FORMATAÇÃO DE MOEDA
+        function formatarMoeda(valor) {
+            valor = valor.replace(/\D/g, '');
+            valor = (parseInt(valor || '0') / 100).toFixed(2);
+            const partes = valor.split('.');
+            partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return partes.join(',');
+        }
+
+        function converterParaNumero(valor) {
+            if (!valor) return 0;
+            return parseFloat(valor.replace(/\./g, '').replace(',', '.')) || 0;
+        }
+
+        const camposMoeda = ['salarioBruto', 'outrosRendimentos', 'outrosDescontos'];
+
+        camposMoeda.forEach(function(campoId) {
+            const campo = document.getElementById(campoId);
+
+            campo.addEventListener('input', function(e) {
+                const posicaoCursor = e.target.selectionStart;
+                const valorAnterior = e.target.value;
+                e.target.value = formatarMoeda(e.target.value);
+                const novoValor = e.target.value;
+                if (novoValor.length >= valorAnterior.length) {
+                    e.target.setSelectionRange(posicaoCursor + 1, posicaoCursor + 1);
+                }
+            });
+
+            campo.addEventListener('focus', function(e) {
+                if (e.target.value === '0,00') {
+                    e.target.value = '';
+                }
+            });
+
+            campo.addEventListener('blur', function(e) {
+                if (e.target.value === '' || e.target.value === '0') {
+                    e.target.value = '0,00';
+                }
+            });
+        });
+
+        function calcularINSS(salario) {
+            const teto = 8475.55;
+            if (salario <= 0) return { valor: 0, faixa: 'Nenhuma', aliquota: '0%' };
+
+            let inss = 0;
+            let faixaINSS = '';
+            let aliquotaINSS = '';
+
+            const faixas = [
+                { limite: 1621.00, aliquota: 0.075, deducao: 0.00, nome: 'Até R$ 1.621,00', percentual: '7,5%' },
+                { limite: 2902.84, aliquota: 0.09, deducao: 24.32, nome: 'R$ 1.621,01 a R$ 2.902,84', percentual: '9%' },
+                { limite: 4354.27, aliquota: 0.12, deducao: 111.40, nome: 'R$ 2.902,85 a R$ 4.354,27', percentual: '12%' },
+                { limite: teto, aliquota: 0.14, deducao: 198.49, nome: 'R$ 4.354,28 a R$ 8.475,55', percentual: '14%' }
+            ];
+
+            let salarioCalc = Math.min(salario, teto);
+
+            for (let i = 0; i < faixas.length; i++) {
+                if (salarioCalc <= faixas[i].limite) {
+                    inss = (salarioCalc * faixas[i].aliquota) - faixas[i].deducao;
+                    faixaINSS = faixas[i].nome;
+                    aliquotaINSS = faixas[i].percentual;
+                    break;
+                }
+            }
+
+            return { 
+                valor: Math.max(0, inss),
+                faixa: faixaINSS,
+                aliquota: aliquotaINSS
+            };
+        }
+
+        function calcularIRRF(baseCalculo, dependentes, salarioBrutoTotal) {
+            const deducaoDependente = 189.59;
+            const deducaoTotal = dependentes * deducaoDependente;
+
+            let baseTributavel = baseCalculo - deducaoTotal;
+
+            if (baseTributavel <= 0) {
+                return { 
+                    baseTributavel: 0,
+                    irrfTabela: 0, 
+                    descontoAdicional: 0, 
+                    irrfFinal: 0, 
+                    deducaoDep: deducaoTotal,
+                    faixaIRRF: 'Isento',
+                    aliquotaIRRF: '0%'
+                };
+            }
+
+            let irrfTabela = 0;
+            let faixaIRRF = '';
+            let aliquotaIRRF = '';
+
+            if (baseTributavel <= 2428.80) {
+                irrfTabela = 0;
+                faixaIRRF = 'Isento';
+                aliquotaIRRF = '0%';
+            } else if (baseTributavel <= 2826.65) {
+                irrfTabela = (baseTributavel * 0.075) - 182.16;
+                faixaIRRF = 'R$ 2.428,81 a R$ 2.826,65';
+                aliquotaIRRF = '7,5%';
+            } else if (baseTributavel <= 3751.05) {
+                irrfTabela = (baseTributavel * 0.15) - 394.16;
+                faixaIRRF = 'R$ 2.826,66 a R$ 3.751,05';
+                aliquotaIRRF = '15%';
+            } else if (baseTributavel <= 4664.68) {
+                irrfTabela = (baseTributavel * 0.225) - 675.49;
+                faixaIRRF = 'R$ 3.751,06 a R$ 4.664,68';
+                aliquotaIRRF = '22,5%';
+            } else {
+                irrfTabela = (baseTributavel * 0.275) - 908.73;
+                faixaIRRF = 'Acima de R$ 4.664,68';
+                aliquotaIRRF = '27,5%';
+            }
+
+            irrfTabela = Math.max(0, irrfTabela);
+
+            let descontoAdicional = 0;
+
+            if (salarioBrutoTotal <= 5000.00) {
+                descontoAdicional = Math.min(irrfTabela, 312.89);
+            } else if (salarioBrutoTotal <= 7350.00) {
+                descontoAdicional = Math.max(0, 978.62 - (0.133145 * salarioBrutoTotal));
+                descontoAdicional = Math.min(descontoAdicional, irrfTabela);
+            }
+
+            let irrfFinal = Math.max(0, irrfTabela - descontoAdicional);
+
+            return { 
+                baseTributavel,
+                irrfTabela, 
+                descontoAdicional, 
+                irrfFinal, 
+                deducaoDep: deducaoTotal,
+                faixaIRRF: faixaIRRF,
+                aliquotaIRRF: aliquotaIRRF
+            };
+        }
+
+        function formatarMoedaExibicao(valor) {
+            return valor.toLocaleString('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+            });
+        }
+
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const salarioBrutoBase = converterParaNumero(document.getElementById('salarioBruto').value);
+            const outrosRendimentos = converterParaNumero(document.getElementById('outrosRendimentos').value);
+            const outrosDescontos = converterParaNumero(document.getElementById('outrosDescontos').value);
+            const dependentes = parseInt(document.getElementById('dependentes').value) || 0;
+
+            const salarioBrutoTotal = salarioBrutoBase + outrosRendimentos;
+
+            const resultadoINSS = calcularINSS(salarioBrutoTotal);
+            const inssCalculado = resultadoINSS.valor;
+            const descontoSimplificado = 607.20;
+
+            const deducaoParaIRRF = Math.max(inssCalculado, descontoSimplificado);
+            const metodoUsado = (deducaoParaIRRF === descontoSimplificado) ? 
+                "Desconto Simplificado" : "INSS Progressivo";
+
+            const baseIRRF = salarioBrutoTotal - deducaoParaIRRF;
+            const resultadoIRRF = calcularIRRF(baseIRRF, dependentes, salarioBrutoTotal);
+
+            // CORREÇÃO: FGTS sobre salário bruto TOTAL
+            const fgts = salarioBrutoTotal * 0.08;
+
+            const salarioLiquido = salarioBrutoTotal - inssCalculado - resultadoIRRF.irrfFinal - outrosDescontos;
+
+            // PREENCHER RESUMO
+            document.getElementById('resumoBruto').textContent = formatarMoedaExibicao(salarioBrutoBase);
+            document.getElementById('resumoOutrosRend').textContent = formatarMoedaExibicao(outrosRendimentos);
+            document.getElementById('resumoBrutoTotal').textContent = formatarMoedaExibicao(salarioBrutoTotal);
+            document.getElementById('resumoINSSLabel').textContent = '(-) Desconto INSS (' + resultadoINSS.aliquota + ')';
+            document.getElementById('resumoINSS').textContent = formatarMoedaExibicao(inssCalculado);
+            document.getElementById('resumoIRRFLabel').textContent = '(-) Desconto IRRF (' + resultadoIRRF.aliquotaIRRF + ')';
+            document.getElementById('resumoIRRF').textContent = formatarMoedaExibicao(resultadoIRRF.irrfFinal);
+            document.getElementById('resumoOutrosDesc').textContent = formatarMoedaExibicao(outrosDescontos);
+            document.getElementById('resumoLiquido').textContent = formatarMoedaExibicao(salarioLiquido);
+
+            // PREENCHER DETALHAMENTO
+            document.getElementById('showBruto').textContent = formatarMoedaExibicao(salarioBrutoBase);
+            document.getElementById('showOutrosRend').textContent = formatarMoedaExibicao(outrosRendimentos);
+            document.getElementById('showBrutoTotal').textContent = formatarMoedaExibicao(salarioBrutoTotal);
+            document.getElementById('showINSSDescontado').textContent = formatarMoedaExibicao(inssCalculado);
+            document.getElementById('faixaINSS').textContent = '📌 Faixa INSS aplicada: ' + resultadoINSS.faixa + ' | Alíquota: ' + resultadoINSS.aliquota;
+            document.getElementById('showINSSCalc').textContent = formatarMoedaExibicao(inssCalculado);
+            document.getElementById('showDescSimp').textContent = formatarMoedaExibicao(descontoSimplificado);
+            document.getElementById('showDeducaoIRRF').textContent = formatarMoedaExibicao(deducaoParaIRRF);
+            document.getElementById('metodoEscolhido').textContent = '✓ Método utilizado para base IRRF: ' + metodoUsado + ' (mais vantajoso)';
+            document.getElementById('showBaseIRRF').textContent = formatarMoedaExibicao(baseIRRF);
+            document.getElementById('showDeducaoDep').textContent = formatarMoedaExibicao(resultadoIRRF.deducaoDep);
+            document.getElementById('showBaseTributavel').textContent = formatarMoedaExibicao(resultadoIRRF.baseTributavel);
+            document.getElementById('showIRRFTabela').textContent = formatarMoedaExibicao(resultadoIRRF.irrfTabela);
+            document.getElementById('faixaIRRF').textContent = '📌 Faixa IRRF aplicada: ' + resultadoIRRF.faixaIRRF + ' | Alíquota: ' + resultadoIRRF.aliquotaIRRF;
+            document.getElementById('showDescontoAdicional').textContent = formatarMoedaExibicao(resultadoIRRF.descontoAdicional);
+            document.getElementById('showIRRF').textContent = formatarMoedaExibicao(resultadoIRRF.irrfFinal);
+            document.getElementById('showOutrosDesc').textContent = formatarMoedaExibicao(outrosDescontos);
+            document.getElementById('showFGTS').textContent = formatarMoedaExibicao(fgts);
+            document.getElementById('salarioLiquido').textContent = formatarMoedaExibicao(salarioLiquido);
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Inicializa tema ao carregar
+        initTheme();
+    </script>
+</body>
+</html>
